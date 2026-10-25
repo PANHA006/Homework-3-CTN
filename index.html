@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAO Panha - [CTN] Containers</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Kantumruy Pro & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- 🌐 Global Page Header (Navbar) -->
+    <header class="page-header">
+        <div class="nav-left">
+            <span class="brand-logo"><i class="fa-brands fa-docker"></i> [CTN] Containers</span>
+            <span class="nav-divider">|</span>
+            <span class="nav-subtitle">Part 5: Custom Webpage Injection</span>
+        </div>
+        <div class="nav-right">
+            <span class="live-pill">
+                <span class="ping-dot"></span>
+                <span class="static-dot"></span>
+                Port 8034 Active
+            </span>
+            <span class="student-pill"><i class="fa-solid fa-user-graduate"></i> PG-A</span>
+        </div>
+    </header>
+
+    <!-- 🎴 Main Content Container -->
+    <main class="page-main">
+        <div class="profile-card">
+            <!-- Header Profile inside card -->
+            <div class="card-header-profile">
+                <div class="avatar-ring">
+                    <div class="avatar-inner">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                </div>
+                <div class="header-titles">
+                    <h1 class="student-name">LAO Panha</h1>
+                    <p class="subtitle">Cloud & Network Engineering • Containers Lab</p>
+                </div>
+            </div>
+
+            <!-- Divider Line -->
+            <hr class="section-divider">
+
+            <!-- 🏆 Unified Tech Spec Sheet (Apple / Tesla Style) -->
+            <section class="mb-4 rounded-2xl bg-slate-50/90 border border-slate-200/90 shadow-sm overflow-hidden grid grid-cols-2">
+                <!-- Cell 1: Student ID -->
+                <div class="p-3.5 sm:p-4 border-r border-b border-slate-200/80 hover:bg-white/80 transition-colors duration-200">
+                    <div class="flex items-center gap-2 mb-1 text-slate-500 font-bold text-[11px] uppercase tracking-wider">
+                        <span class="text-sky-600"><i class="fa-solid fa-id-card"></i></span>
+                        <span>Student ID</span>
+                    </div>
+                    <div class="text-[15px] font-extrabold text-slate-800 tracking-tight">
+                        DUC20240834
+                    </div>
+                </div>
+
+                <!-- Cell 2: Course Name -->
+                <div class="p-3.5 sm:p-4 border-b border-slate-200/80 hover:bg-white/80 transition-colors duration-200">
+                    <div class="flex items-center gap-2 mb-1 text-slate-500 font-bold text-[11px] uppercase tracking-wider">
+                        <span class="text-indigo-600"><i class="fa-solid fa-cubes"></i></span>
+                        <span>Course Name</span>
+                    </div>
+                    <div class="text-[15px] font-extrabold text-slate-800 tracking-tight">
+                        [CTN] Containers
+                    </div>
+                </div>
+
+                <!-- Cell 3: Deployment -->
+                <div class="p-3.5 sm:p-4 border-r border-slate-200/80 hover:bg-white/80 transition-colors duration-200">
+                    <div class="flex items-center gap-2 mb-1 text-slate-500 font-bold text-[11px] uppercase tracking-wider">
+                        <span class="text-blue-600"><i class="fa-brands fa-docker"></i></span>
+                        <span>Deployment</span>
+                    </div>
+                    <div class="text-[15px] font-extrabold text-slate-800 tracking-tight">
+                        Docker Nginx:alpine
+                    </div>
+                </div>
+
+                <!-- Cell 4: Injection Method -->
+                <div class="p-3.5 sm:p-4 hover:bg-white/80 transition-colors duration-200">
+                    <div class="flex items-center gap-2 mb-1 text-slate-500 font-bold text-[11px] uppercase tracking-wider">
+                        <span class="text-emerald-600"><i class="fa-solid fa-code-commit"></i></span>
+                        <span>Injection Method</span>
+                    </div>
+                    <div class="text-[14px] font-extrabold text-slate-800 tracking-tight flex items-center gap-1.5">
+                        <code class="px-2 py-0.5 rounded bg-slate-200/80 text-sky-700 font-mono text-[12px] font-bold border border-slate-300/60">docker cp</code>
+                        <span>command</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Divider Line between Specs and Bio -->
+            <hr class="section-divider">
+
+            <!-- Bio & Project Objective -->
+            <section class="intro-box">
+                <div class="intro-header">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <h3>សេចក្តីណែនាំ និងគោលបំណងគម្រោង (3-Sentence Introduction)</h3>
+                </div>
+                <p class="intro-text">
+                    ខ្ញុំបាទឈ្មោះ <strong>LAO Panha</strong> ជានិស្សិតថ្នាក់ <strong>PG-A</strong> នៃមុខវិជ្ជា <strong>[CTN] Containers</strong>។ 
+                    គេហទំព័រផ្ទាល់ខ្លួននេះត្រូវបានដាក់ឱ្យដំណើរការនៅលើ <strong>Nginx Alpine Container</strong> ដោយប្រើប្រាស់បច្ចេកទេស File Injection តាមរយៈពាក្យបញ្ជា <code>docker cp</code>។ 
+                    គម្រោងនេះមានគោលបំណងត្រួតពិនិត្យដំណើរការខាងក្នុងរបស់ប្រព័ន្ធ (System Inspection) តាមរយៈការវិភាគ OS Processes ជាមួយ <code>docker top</code>, ការប្រើប្រាស់ Storage ជាមួយ <code>df -h</code>, និងការទាញយក Server Access Logs មកកាន់ Host Machine។
+                </p>
+            </section>
+
+            <!-- Divider Line -->
+            <hr class="section-divider">
+
+            <!-- Tech Stack Badges -->
+            <div class="tech-pills">
+                <span class="pill"><i class="fa-brands fa-docker"></i> Docker</span>
+                <span class="pill"><i class="fa-solid fa-network-wired"></i> Nginx</span>
+                <span class="pill"><i class="fa-brands fa-linux"></i> Alpine Linux</span>
+                <span class="pill"><i class="fa-solid fa-microchip"></i> System Inspection</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- 📌 Global Page Footer -->
+    <footer class="page-footer">
+        <div class="footer-left">
+            <span>© 2026 <strong>LAO Panha</strong> (DUC20240834) • Homework-3 Assignment</span>
+        </div>
+        <div class="footer-right">
+            <span><i class="fa-solid fa-server"></i> Nginx Alpine Engine | Port 8034</span>
+        </div>
+    </footer>
+</body>
+</html>

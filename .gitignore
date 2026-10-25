@@ -1,0 +1,15 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor & IDE directories
+.idea/
+.vscode/*
+!.vscode/settings.json
+
+# Temporary files (keep host_access.log tracked as required by assignment)
+*.tmp
+*.bak
+*.swp
+*~

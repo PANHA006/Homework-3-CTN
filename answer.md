@@ -209,32 +209,46 @@ tmpfs                     4.0K         0      4.0K   0% /sys/firmware
 docker cp panha-bio-site:/var/log/nginx/access.log host_access.log
 ```
 
-> **💡 ចំណាំបច្ចេកទេសកម្រិតខ្ពស់ (Expert Technical Note):**  
-> នៅក្នុង Official Docker Image `nginx:alpine` ឯកសារ `/var/log/nginx/access.log` ត្រូវបាន Docker ធ្វើ Symlink ទៅកាន់ `/dev/stdout` ដើម្បីឱ្យ Docker Daemon ចាប់ Log តាម Docker Standard Output។  
-> ប្រសិនបើការប្រើ `docker cp` លើ Symlink បង្កើតបាន File ទំហំ 0-byte នោះយើងអាចប្រើប្រាស់ពាក្យបញ្ជាផ្លូវការរបស់ Docker Subsystem បានដូចខាងក្រោម៖  
-> ```bash
-> docker logs panha-bio-site > host_access.log
-> ```
+#### 💡 ការវិភាគបច្ចេកទេស និងការដោះស្រាយបញ្ហាលើ Windows (Deep Troubleshooting Experience):
+នៅពេលដំណើរការពាក្យបញ្ជា `docker cp` លើប្រព័ន្ធប្រតិបត្តិការ Windows (Non-Administrator Terminal) យើងនឹងជួបសារព្រមានមួយ៖
+```text
+Successfully copied 11B to D:\Desktop\Homework-3-CTN\host_access.log
+symlinkat /dev/stdout host_access.log: A required privilege is not held by the client.
+```
+
+**មូលហេតុបច្ចេកទេស (Root Cause Analysis):**
+1. នៅក្នុង Base Image ផ្លូវការ `nginx:alpine` ឯកសារ `/var/log/nginx/access.log` មិនមែនជា File ធម្មតាទេ វាជា **Linux Symbolic Link (Symlink)** ដែលចង្អុលទៅកាន់ `/dev/stdout`។
+2. នៅលើប្រព័ន្ធប្រតិបត្តិការ **Windows** ការបង្កើត Symbolic Link តម្រូវឱ្យមានសិទ្ធិកម្រិត **Administrator** ឬបើក Developer Mode។ ប្រសិនបើដំណើរការ Terminal ជា User ធម្មតា Windows នឹងបដិសេធមិនឱ្យបង្កើត Symlink ឡើយ។
+
+**ដំណោះស្រាយដ៏ត្រឹមត្រូវ និងមានប្រសិទ្ធភាពបំផុត (The Production-Ready Solution):**  
+ដើម្បីទាញយកអត្ថបទ Log ពិតប្រាកដចេញពី Standard Output Stream ដោយមិនបាច់ពឹងផ្អែកលើ Windows Symlink Permissions យើងប្រើប្រាស់ពាក្យបញ្ជាផ្លូវការរបស់ Docker Logging Subsystem៖
+
+```bash
+docker logs panha-bio-site > host_access.log
+```
+ពាក្យបញ្ជានេះទាញយកកំណត់ត្រា HTTP Request ទាំងអស់ចេញពី Container មកកត់ត្រាចូលក្នុងឯកសារ `host_access.log` ដោយជោគជ័យ ១០០%។
 
 ---
 
 ### ៤.៣ ខ្លឹមសារឯកសារ `host_access.log` ជាក់ស្តែង
-ឯកសារ `host_access.log` ត្រូវបានបង្កើតឡើង និងទាញយកដោយជោគជ័យនៅក្នុង Folder គម្រោង ដែលមានកំណត់ត្រាលើសពី ១០ ដង ជាមួយ Port 8034៖
+ឯកសារ `host_access.log` ត្រូវបានបង្កើតឡើង និងទាញយកដោយជោគជ័យនៅក្នុង Folder គម្រោង ដែលមានកំណត់ត្រាលើសពី ១០ ដង (ជាក់ស្តែងគឺ ១៥ ដង) ជាមួយ Port 8034៖
 
 ```text
-172.17.0.1 - - [25/Oct/2026:08:38:38 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
-172.17.0.1 - - [25/Oct/2026:08:38:38 +0000] "GET /style.css HTTP/1.1" 200 8256 "http://localhost:8034/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
-172.17.0.1 - - [25/Oct/2026:08:38:39 +0000] "GET /favicon.ico HTTP/1.1" 404 555 "http://localhost:8034/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
-172.17.0.1 - - [25/Oct/2026:08:44:48 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:19:32 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
+172.17.0.1 - - [25/Oct/2026:09:19:32 +0000] "GET /style.css HTTP/1.1" 304 0 "http://localhost:8034/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
+172.17.0.1 - - [25/Oct/2026:09:19:34 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
+172.17.0.1 - - [25/Oct/2026:09:19:35 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
+172.17.0.1 - - [25/Oct/2026:09:19:37 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
+172.17.0.1 - - [25/Oct/2026:09:19:38 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
+172.17.0.1 - - [25/Oct/2026:09:19:38 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
+172.17.0.1 - - [25/Oct/2026:09:26:06 +0000] "GET / HTTP/1.1" 200 7903 "-" "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9711" "-"
 ```
 
 #### ការពន្យល់រចនាសម្ព័ន្ធ Nginx Common Combined Log Format:
